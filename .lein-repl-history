@@ -24,3 +24,4 @@ quit
 quit
 (load-file "start.clj")
 (build-once "min")
+(load-file "start.clj")
