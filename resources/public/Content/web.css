@@ -1,0 +1,9 @@
+body {
+  background: #cfd9df;
+  background: linear-gradient(to right, #cfd9df, #e2ebf0); }
+
+.ui.fixed.menu + .ui.grid {
+  padding-top: 5rem; }
+
+.mba-padding-top-xs {
+  padding-top: 2rem; }
