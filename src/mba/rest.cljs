@@ -4,9 +4,10 @@
            [mba.config   :as config]))
 
 (def service-url
-  (if config/dev?
-   "http://milesbox.azurewebsites.net/api"
-   "/api"))
+  "http://milesbox.azurewebsites.net/api"
+  #_(if config/dev?
+     "http://milesbox.azurewebsites.net/api"
+     "/api"))
 
 (defn unpack [v]
   (-> v js->clj w/keywordize-keys))

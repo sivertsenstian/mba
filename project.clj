@@ -41,7 +41,7 @@
     {:id           "min"
      :source-paths ["src"]
      :compiler     {:main            mba.core
-                    :output-to       "resources/public/Scripts/mba.min.js"
+                    :output-to       "docs/Scripts/mba.min.js"
                     :optimizations   :advanced
                     :closure-defines {goog.DEBUG false}
                     :pretty-print    false}}]})
