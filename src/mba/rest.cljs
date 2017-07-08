@@ -4,7 +4,7 @@
            [mba.config   :as config]))
 
 (def service-url
-  "http://milesbox.azurewebsites.net/api"
+  "https://milesbox.azurewebsites.net/api"
   #_(if config/dev?
      "http://milesbox.azurewebsites.net/api"
      "/api"))
