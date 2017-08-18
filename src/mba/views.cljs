@@ -8,52 +8,55 @@
                    {:keys [BoxId Name Owner Location]
                     [{:keys [Temperature Humidity TimeStamp]} _] :BoxData
                     :as data}]]
-  ^{:key BoxId}
-  [:div.four.wide.column
-   [:div.ui.card
-    {:title (str Name " // " BoxId)}
-    [:div.content
-     [:div.right.floated.meta BoxId]
-     [:img.ui.avatar.image
-      {:src (str "/Content/" (or (get-in config/boxes [BoxId :img])
-                                 "placeholder.jpg"))}]
-     Owner]
-    (when-not data
-      [:div.content.center.aligned
-       [:i.spinner.icon]
-       "Waiting for data"])
-    (when data
-      [:div.content
-       [:div.ui.one.small.statistics
-        [:div.ui.orange.statistic
-         [:div.value Temperature " "
-          [:span {:dangerouslySetInnerHTML {:__html "&deg;"}}]
-          [:span "C"]]
-         [:div.label "Temperature"]]]
-       [:div.ui.one.small.statistics.mba-padding-top-xs
-        [:div.ui.blue.statistic
-         [:div.value Humidity " %"]
-         [:div.label "Humidity"]]]])
-    (when data
-      [:div.content
-       [graph/temperature BoxId]
-       [graph/humidity BoxId]])
-    (when data
-      [:div.content
-       [:span.right.floated
-        [:span.add.to.calendar.icon Location]]
-       [:span.header "Last updated"]
-       [:span.meta
-        (-> TimeStamp js/Date. .toLocaleDateString)
-        " - "
-        (-> TimeStamp js/Date. .toLocaleTimeString)]])]])
+  (let [header (fn []
+                [:div.content
+                 [:div.right.floated.meta BoxId]
+                 [:img.ui.avatar.image
+                  {:src (str (config/path) "Content/" (or (get-in config/boxes [BoxId :img])
+                                                       "placeholder.jpg"))}]
+                 Owner])]
+    ^{:key BoxId}
+    [:div.four.wide.column
+     (if data
+       [:div.ui.card
+        {:title (str Name " // " BoxId)}
+        [header]
+        [:div.content
+         [:div.ui.one.small.statistics
+          [:div.ui.orange.statistic
+           [:div.value Temperature " "
+            [:span {:dangerouslySetInnerHTML {:__html "&deg;"}}]
+            [:span "C"]]
+           [:div.label "Temperature"]]]
+         [:div.ui.one.small.statistics.mba-padding-top-xs
+          [:div.ui.blue.statistic
+           [:div.value Humidity " %"]
+           [:div.label "Humidity"]]]]
+        [:div.content
+         [graph/temperature BoxId]
+         [graph/humidity BoxId]]
+        [:div.content
+         [:span.right.floated
+          [:span.add.to.calendar.icon Location]]
+         [:span.header "Last updated"]
+         [:span.meta
+          (-> TimeStamp js/Date. .toLocaleDateString)
+          " - "
+          (-> TimeStamp js/Date. .toLocaleTimeString)]]]
+
+       [:div.ui.card
+        {:title (str Name " // " BoxId)}
+        [header]
+        [:div.content.center.aligned
+         [:i.spinner.icon]
+         "Waiting for data"]])]))
 
 ;; home
 (defn home-panel []
  (let [boxes (re-frame/subscribe [:boxes])]
   (js/setInterval #(do
                     (re-frame/dispatch [:request-boxes])
-                    (re-frame/dispatch [:request-timeseries])) 60000)
+                    (re-frame/dispatch [:request-timeseries])) 30000)
   (fn []
    (if @boxes
     [:div.ui.row
