@@ -1,5 +1,5 @@
 (ns mba.config
- (:require [clojure.string :as s]))
+  (:require [clojure.string :as s]))
 
 (def dev?
   ^boolean goog.DEBUG)
@@ -15,8 +15,8 @@
      (path p)))
   ([p] (if (s/ends-with? p ".html")
          (s/join "/"
-          (-> p
-              (s/split "/")
-              pop
-              (conj "")))
+                 (-> p
+                     (s/split "/")
+                     pop
+                     (conj "")))
          p)))

@@ -66,7 +66,7 @@
                           :zoom {:enabled false}
                           :grid {:x {:show false}
                                  :y {:show false}}}]
-             (js/c3.generate (clj->js chart-data))))
+          (js/c3.generate (clj->js chart-data))))
       :reagent-render
       (fn [box-id]
         @timeseries

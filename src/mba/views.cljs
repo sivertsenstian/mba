@@ -9,12 +9,13 @@
                     [{:keys [Temperature Humidity TimeStamp]} _] :BoxData
                     :as data}]]
   (let [header (fn []
-                [:div.content
-                 [:div.right.floated.meta BoxId]
-                 [:img.ui.avatar.image
-                  {:src (str (config/path) "Content/" (or (get-in config/boxes [BoxId :img])
-                                                       "placeholder.jpg"))}]
-                 Owner])]
+                 [:div.content
+                  [:div.right.floated.meta BoxId]
+                  [:img.ui.avatar.image
+                   {:src (str (config/path) "Content/"
+                              (or (get-in config/boxes [BoxId :img])
+                                  "placeholder.jpg"))}]
+                  Owner])]
     ^{:key BoxId}
     [:div.four.wide.column
      (if data
@@ -53,15 +54,15 @@
 
 ;; home
 (defn home-panel []
- (let [boxes (re-frame/subscribe [:boxes])]
-  (js/setInterval #(do
-                    (re-frame/dispatch [:request-boxes])
-                    (re-frame/dispatch [:request-timeseries])) 30000)
-  (fn []
-   (if @boxes
-    [:div.ui.row
-     (map render-box @boxes)]
-    [:div.ui.row [:h2 "No boxes found :("]]))))
+  (let [boxes (re-frame/subscribe [:boxes])]
+    (js/setInterval #(do
+                       (re-frame/dispatch [:request-boxes])
+                       (re-frame/dispatch [:request-timeseries])) 30000)
+    (fn []
+      (if @boxes
+        [:div.ui.row
+         (map render-box @boxes)]
+        [:div.ui.row [:h2 "No boxes found :("]]))))
 
 ;; main
 (defn- panels [panel-name]
@@ -77,7 +78,9 @@
     (fn []
       [:div
        [:div.ui.fixed.top.menu
-        [:div.item [:img {:src "https://instagram.fsvg1-1.fna.fbcdn.net/t51.2885-19/s320x320/14073142_328109660855320_1629482734_a.jpg"}]]
+        [:div.item
+         [:img
+          {:src "https://instagram.fsvg1-1.fna.fbcdn.net/t51.2885-19/s320x320/14073142_328109660855320_1629482734_a.jpg"}]]
         [:a.item {:href "#/"} "Dashboard"]]
        [:div.ui.grid.container.mba-view
         [show-panel @active-panel]]])))
