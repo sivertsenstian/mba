@@ -12,7 +12,10 @@ pom.xml.asc
 .lein-failures
 .nrepl-port
 /*.log
-/target
 /*-init.clj
-/resources/public/js/compiled
 out
+/node_modules
+/.cljs_rhino_repl
+/resources
+/docs
+.figwheel_server.log

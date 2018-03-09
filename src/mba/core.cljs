@@ -1,13 +1,14 @@
 (ns mba.core
   (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
-            [cljsjs.d3]
             [mba.events]
             [mba.subs]
             [mba.routes :as routes]
             [mba.views :as views]
-            [mba.config :as config]))
-
+            [mba.config :as config]
+            [cljsjs.react]
+            [cljsjs.react.dom]
+            [cljsjs.create-react-class]))
 
 (defn dev-setup []
   (when config/dev?

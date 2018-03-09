@@ -1,6 +1,6 @@
 (ns mba.subs
-  (:require-macros [reagent.ratom :refer [reaction]])
-  (:require [re-frame.core :as re-frame :refer [reg-sub]]))
+  (:require [re-frame.core :as re-frame
+             :refer [reg-sub]]))
 
 (reg-sub
  :active-panel
@@ -20,10 +20,4 @@
 (reg-sub
  :timeseries
  (fn [state [_ id]]
-   (get-in state [:timeseries id])))
-
-(defn jensen2k []
-  (+ 12 2))
-
-(1 2 3)
-
+   (get state :timeseries)))

@@ -1,0 +1,17 @@
+/resources/public/Content
+/resources/public/Scripts
+/target
+/docs
+*.js
+*.cljs#
+~
+.nrepl-port
+*.log
+.lein-repl-history
+README.md
+LICENSE
+*.png
+*.jpg
+*.min.css
+*.css
+.#*

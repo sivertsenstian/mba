@@ -1,8 +1,7 @@
 (ns mba.views
-  (:require [re-frame.core :as re-frame]
-            [reagent.core  :as r]
-            [mba.config    :as config]
-            [mba.graph     :as graph]))
+  (:require [re-frame.core     :as re-frame]
+            [mba.graph         :as graph]
+            [mba.config        :as config]))
 
 (defn render-box [[_
                    {:keys [BoxId Name Owner Location]
@@ -10,16 +9,16 @@
                     :as data}]]
   (let [header (fn []
                  [:div.content
-                  [:div.right.floated.meta BoxId]
-                  [:img.ui.avatar.image
+                  [:img.right.floated.mini.ui.image
                    {:src (str (config/path) "Content/"
                               (or (get-in config/boxes [BoxId :img])
                                   "placeholder.jpg"))}]
-                  Owner])]
+                  [:div.header Owner]
+                  [:div.meta BoxId]])]
     ^{:key BoxId}
-    [:div.four.wide.column
+    [:div.column
      (if data
-       [:div.ui.card
+       [:div.ui.centered.card
         {:title (str Name " // " BoxId)}
         [header]
         [:div.content
@@ -33,9 +32,6 @@
           [:div.ui.blue.statistic
            [:div.value Humidity " %"]
            [:div.label "Humidity"]]]]
-        [:div.content
-         [graph/temperature BoxId]
-         [graph/humidity BoxId]]
         [:div.content
          [:span.right.floated
           [:span.add.to.calendar.icon Location]]
@@ -51,7 +47,6 @@
         [:div.content.center.aligned
          [:i.spinner.icon]
          "Waiting for data"]])]))
-
 ;; home
 (defn home-panel []
   (let [boxes (re-frame/subscribe [:boxes])]
@@ -59,10 +54,12 @@
                        (re-frame/dispatch [:request-boxes])
                        (re-frame/dispatch [:request-timeseries])) 30000)
     (fn []
-      (if @boxes
-        [:div.ui.row
-         (map render-box @boxes)]
-        [:div.ui.row [:h2 "No boxes found :("]]))))
+      [:div.ui.stackable.grid
+       (if-let [boxes @boxes]
+         (into [:div.four.column.centered.row]
+               (map render-box boxes))
+         [:div.ui.centered.row
+          [:h2 "No boxes found :("]])])))
 
 ;; main
 (defn- panels [panel-name]
@@ -77,10 +74,10 @@
   (let [active-panel (re-frame/subscribe [:active-panel])]
     (fn []
       [:div
-       [:div.ui.fixed.top.menu
-        [:div.item
-         [:img
-          {:src "https://instagram.fsvg1-1.fna.fbcdn.net/t51.2885-19/s320x320/14073142_328109660855320_1629482734_a.jpg"}]]
-        [:a.item {:href "#/"} "Dashboard"]]
-       [:div.ui.grid.container.mba-view
+       [:div.ui.container.right.aligned
+        [:img {:height 75 :src (str (config/path) "Content/logo.png")}]]
+       [:div.ui.container
+        [graph/timeseries]
+        [:h4.ui.horizontal.divider.header
+         [:i.user.icon]]
         [show-panel @active-panel]]])))
