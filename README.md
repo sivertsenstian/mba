@@ -1,1 +1,1 @@
-[milesbox client](https://sivertsenstian.github.io/mba/)
+[milesbox client](https://mba.sivertsen.tech/)
