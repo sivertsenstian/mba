@@ -1,5 +1,6 @@
 (ns mba.graph (:require [re-frame.core :as re-frame]
                         [reagent.core  :as r]
+                        [mba.config    :as config]
                         [cljsjs.chartjs]))
 
 (defn timeseries []
@@ -9,13 +10,15 @@
         #(let [element (r/dom-node %)
                ctx (.getContext element "2d")
                chart-data
-               (clj->js {:type "line"
-                         :data {:datasets []}
-                         :options {:responsive true
-                                   :title {:display true
-                                           :text "Timeseries"}
-                                   :scales {:xAxes [{:type "time"
-                                                     :time {:displayFormats {:hour "DD/MM HH:mm"}}}]}}})]
+               (clj->js
+                {:type "line"
+                 :data {:datasets []}
+                 :options
+                 {:responsive true
+                  :title {:display true
+                          :text "Timeseries"}
+                  :scales {:xAxes [{:type "time"
+                                    :time {:displayFormats {:hour "DD/MM HH:mm"}}}]}}})]
            (reset! chart (js/Chart. ctx chart-data)))
         update-data
         #(let [data (map (fn [[id series]]
@@ -33,18 +36,19 @@
                          @timeseries)
                cdata
                (reduce
-                (fn [d [id {:keys [temperature humidity]}]]
-                  (into d
-                        [{:label (str id " - Temperature")
-                          :fill false
-                          :backgroundColor "#f2711c"
-                          :borderColor "#f2711c"
-                          :data temperature}
-                         {:label (str id " - Humidity")
-                          :fill false
-                          :backgroundColor "#2185d0"
-                          :borderColor "#2185d0"
-                          :data humidity}]))
+                (fn [d [[id name] {:keys [temperature humidity]}]]
+                  (let [colors (get-in config/boxes [id :colors])]
+                    (into d
+                          [{:label (str name " - Temperature")
+                            :fill false
+                            :backgroundColor (colors :temperature)
+                            :borderColor (colors :temperature)
+                            :data temperature}
+                           {:label (str name " - Humidity")
+                            :fill false
+                            :backgroundColor (colors :humidity)
+                            :borderColor (colors :humidity)
+                            :data humidity}])))
                 []
                 data)]
            (when @chart

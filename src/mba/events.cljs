@@ -47,5 +47,5 @@
 (reg-event-db
  :receive-timeseries
  (fn  [state [_ data]]
-   (let [ts (map #(vector (:Name %) (:BoxData %)) data)]
+   (let [ts (map #(vector [(:BoxId %) (:Name %)] (:BoxData %)) data)]
      (assoc state :timeseries (into (sorted-map) ts)))))

@@ -21,17 +21,22 @@
        [:div.ui.centered.card
         {:title (str Name " // " BoxId)}
         [header]
-        [:div.content
-         [:div.ui.one.small.statistics
-          [:div.ui.orange.statistic
-           [:div.value Temperature " "
-            [:span {:dangerouslySetInnerHTML {:__html "&deg;"}}]
-            [:span "C"]]
-           [:div.label "Temperature"]]]
-         [:div.ui.one.small.statistics.mba-padding-top-xs
-          [:div.ui.blue.statistic
-           [:div.value Humidity " %"]
-           [:div.label "Humidity"]]]]
+        (let [{{{:keys [temperature humidity]} :colors} BoxId} config/boxes]
+          [:div.content
+           [:div.ui.one.small.statistics
+            [:div.ui.statistic
+             [:div.value
+              {:style {:color temperature}}
+              Temperature " "
+              [:span {:dangerouslySetInnerHTML {:__html "&deg;"}}]
+              [:span "C"]]
+             [:div.label "Temperature"]]]
+           [:div.ui.one.small.statistics.mba-padding-top-xs
+            [:div.ui.statistic
+             [:div.value
+              {:style {:color humidity}}
+              Humidity " %"]
+             [:div.label "Humidity"]]]])
         [:div.content
          [:span.right.floated
           [:span.add.to.calendar.icon Location]]

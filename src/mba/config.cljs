@@ -4,10 +4,18 @@
 (def dev?
   ^boolean goog.DEBUG)
 
-(def boxes {1835 {:img "stian.jpg"}
-            2470 {:img "jp.jpg"}
-            816 {:img "marcel.jpg"}
-            1234 {:img "kjetil.jpg"}})
+(def boxes {1835 {:img "stian.jpg"
+                  :colors {:temperature "#f2711c"
+                           :humidity "#2185d0"}}
+            2470 {:img "jp.jpg"
+                  :colors {:temperature "#CE6018"
+                           :humidity "#1C71B1"}}
+            816 {:img "marcel.jpg"
+                 :colors {:temperature "#F4863E"
+                           :humidity "#4297D7"}}
+            1234 {:img "kjetil.jpg"
+                  :colors {:temperature "#A94F14"
+                           :humidity "#175D92"}}})
 
 (defn path
   ([]
