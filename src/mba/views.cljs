@@ -3,6 +3,46 @@
             [mba.graph         :as graph]
             [mba.config        :as config]))
 
+(defn chiev [{:keys [name value description winner]}]
+  [:div.item
+   [:img.ui.avatar.image {:src (str (config/path) "Content/"
+                                    (or (get-in config/boxes [winner :img])
+                                        "placeholder.jpg"))}]
+   [:div.content
+    [:a.header (str name ": " value)]
+    [:div.description description]]])
+
+(defn achievments []
+  (let [timeseries (re-frame/subscribe [:timeseries])]
+    (fn []
+      (let [values (remove #(= (:BoxId %) 0) (mapcat vec (vals @timeseries)))
+            hottest (apply max-key :Temperature values)
+            coldest (apply min-key :Temperature values)
+            wettest (apply max-key :Humidity values)
+            driest (apply min-key :Humidity values)
+            chievs [{:name "Beddoen"
+                     :description (-> hottest :TimeStamp js/Date. (js/moment.) (.format "MMMM Do YYYY, HH:mm"))
+                     :value (str (-> hottest :Temperature Math/round) " degrees celsius")
+                     :winner (:BoxId hottest)}
+                    {:name "Ice ice baby"
+                     :description (-> coldest :TimeStamp js/Date. (js/moment.) (.format "MMMM Do YYYY, HH:mm"))
+                     :value (str (-> coldest :Temperature Math/round) " degrees celsius")
+                     :winner (:BoxId coldest)}
+                    {:name "Ordfører i vågå"
+                     :description(-> wettest :TimeStamp js/Date. (js/moment.) (.format "MMMM Do YYYY, HH:mm"))
+                     :value (str (-> wettest :Humidity Math/round) "% humidity")
+                     :winner (:BoxId wettest)}
+                    {:name "Tørrpinnen"
+                     :description(-> driest :TimeStamp js/Date. (js/moment.) (.format "MMMM Do YYYY, HH:mm"))
+                     :value (str (-> driest :Humidity Math/round) "% humidity")
+                     :winner (:BoxId driest)}]]
+        (if (seq values)
+          (into
+           [:div.ui.tiny.divided.very.relaxed.list]
+           (map chiev chievs))
+          [:div.ui.content.aligned.center "No data :("])))))
+
+
 (defn render-box [[_
                    {:keys [BoxId Name Owner Location]
                     [{:keys [Temperature Humidity TimeStamp]} _] :BoxData
@@ -82,7 +122,12 @@
        [:div.ui.container.right.aligned
         [:img {:height 75 :src (str (config/path) "Content/logo.png")}]]
        [:div.ui.container
-        [graph/timeseries]
+        [:div.ui.grid
+         [:div.twelve.wide.column
+          [graph/timeseries]]
+         [:div.four.wide.column
+          [:div.ui.header "Achievments"]
+          [achievments]]]
         [:h4.ui.horizontal.divider.header
          [:i.user.icon]]
         [show-panel @active-panel]]])))
